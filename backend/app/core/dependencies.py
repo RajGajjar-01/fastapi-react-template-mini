@@ -1,6 +1,8 @@
 from collections.abc import AsyncGenerator
+from typing import cast
 
 from fastapi import HTTPException, Request, status
+from httpx import AsyncClient
 from jwt import PyJWTError
 
 from app.core.security import verify_token
@@ -26,3 +28,7 @@ async def get_current_user(request: Request) -> dict[str, str | object]:
 async def get_user_repository(request: Request) -> AsyncGenerator[UserRepository]:
     pool = request.app.state.pool
     yield UserRepository(pool)
+
+
+async def get_supabase_client(request: Request) -> AsyncClient:
+    return cast(AsyncClient, request.app.state.supabase_client)

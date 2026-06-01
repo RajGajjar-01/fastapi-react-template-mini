@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.v1.auth import router as auth_router
+from app.core.clients import create_supabase_client
 from app.core.config import settings
 from app.core.database import create_pool
 from app.core.exception_handlers import (
@@ -19,7 +20,9 @@ from app.core.exception_handlers import (
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     app.state.pool = await create_pool()
-    yield
+    async with create_supabase_client() as supabase_client:
+        app.state.supabase_client = supabase_client
+        yield
     await app.state.pool.close()
 
 

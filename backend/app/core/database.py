@@ -14,6 +14,13 @@ async def create_pool() -> asyncpg.Pool:
         min_size=settings.DB_POOL_SIZE,
         max_size=settings.DB_POOL_SIZE + settings.DB_MAX_OVERFLOW,
         timeout=settings.DB_POOL_TIMEOUT,
+
+        # Tell PostgreSQL to keep this connection alive from the server side
+        server_settings={
+            "tcp_keepalives_idle": "120",
+            "tcp_keepalives_interval": "10",
+            "tcp_keepalives_count": "5",
+        }
     )
 
 
