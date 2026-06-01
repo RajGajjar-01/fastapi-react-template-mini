@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.v1.auth import router as auth_router
+from app.core.config import settings
 from app.core.database import create_pool
 from app.core.exception_handlers import (
     http_exception_handler,
@@ -26,10 +27,11 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    max_age=3600
 )
 
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)  # type: ignore[arg-type]
