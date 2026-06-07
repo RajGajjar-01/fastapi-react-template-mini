@@ -2,6 +2,7 @@ import logging
 from typing import cast
 
 from fastapi import APIRouter, Depends, Request, Response, status
+from fastapi.responses import JSONResponse
 from httpx import AsyncClient
 
 from app.core.config import settings
@@ -17,7 +18,7 @@ from app.schemas.auth import (
     SignupRequest,
     UpdateProfileRequest,
 )
-from app.schemas.common import err
+from app.core.response import error_response, success_response
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ async def login(
     response: Response,
     client: AsyncClient = Depends(get_supabase_client),
     user_repo: UserRepository = Depends(get_user_repository),
-) -> dict[str, object]:
+) -> JSONResponse:
     supabase_resp = await client.post(
         f"{settings.SUPABASE_URL}/auth/v1/token",
         params={"grant_type": "password"},
@@ -66,7 +67,7 @@ async def login(
     )
 
     if supabase_resp.status_code != 200:
-        raise err("INVALID_CREDENTIALS", "Invalid email or password")
+        return error_response(401, "INVALID_CREDENTIALS", "Invalid email or password")
 
     tokens = supabase_resp.json()
     payload = verify_token(tokens["access_token"])
@@ -78,7 +79,7 @@ async def login(
 
     set_auth_cookies(response, tokens)
 
-    return {"data": {"message": "Logged in", "email": body.email}}
+    return success_response({"message": "Logged in", "email": body.email})
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
@@ -87,7 +88,7 @@ async def signup(
     response: Response,
     client: AsyncClient = Depends(get_supabase_client),
     user_repo: UserRepository = Depends(get_user_repository),
-) -> dict[str, object]:
+) -> JSONResponse:
     supabase_resp = await client.post(
         f"{settings.SUPABASE_URL}/auth/v1/signup",
         headers={
@@ -99,7 +100,7 @@ async def signup(
 
     if supabase_resp.status_code != 200:
         detail = supabase_resp.json().get("msg", "Signup failed")
-        raise err("SIGNUP_FAILED", detail)
+        return error_response(400, "SIGNUP_FAILED", detail)
 
     data = supabase_resp.json()
     auto_confirmed = bool(data.get("access_token"))
@@ -116,12 +117,10 @@ async def signup(
         except Exception:
             logger.warning("Signup token verification failed", exc_info=True)
 
-    return {
-        "data": {
-            "message": "Signed up" if auto_confirmed else "Confirmation email sent",
-            "email": body.email,
-        }
-    }
+    return success_response(
+        {"message": "Signed up" if auto_confirmed else "Confirmation email sent", "email": body.email},
+        status_code=status.HTTP_201_CREATED,
+    )
 
 
 @router.post("/refresh")
@@ -129,10 +128,10 @@ async def refresh(
     request: Request,
     response: Response,
     client: AsyncClient = Depends(get_supabase_client),
-) -> dict[str, object]:
+) -> JSONResponse:
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
-        raise err("NOT_AUTHENTICATED", "Not authenticated", status_code=401)
+        return error_response(401, "NOT_AUTHENTICATED", "Not authenticated")
 
     supabase_resp = await client.post(
         f"{settings.SUPABASE_URL}/auth/v1/token",
@@ -145,13 +144,13 @@ async def refresh(
     )
 
     if supabase_resp.status_code != 200:
-        raise err("SESSION_EXPIRED", "Session expired, please log in again", status_code=401)
+        return error_response(401, "SESSION_EXPIRED", "Session expired, please log in again")
 
     tokens = supabase_resp.json()
 
     set_auth_cookies(response, tokens)
 
-    return {"data": {"message": "Refreshed"}}
+    return success_response({"message": "Refreshed"})
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
@@ -178,19 +177,17 @@ async def logout(
 async def get_me(
     current_user: dict[str, str | object] = Depends(get_current_user),
     user_repo: UserRepository = Depends(get_user_repository),
-) -> dict[str, object]:
+) -> JSONResponse:
     user_id = cast(str, current_user["sub"])
     profile = await user_repo.get_by_id(user_id)
     if profile is None:
-        raise err("PROFILE_NOT_FOUND", "Profile not found", status_code=404)
-    return {
-        "data": {
-            "user_id": profile.id,
-            "email": profile.email,
-            "full_name": profile.full_name,
-            "avatar_url": profile.avatar_url,
-        }
-    }
+        return error_response(404, "PROFILE_NOT_FOUND", "Profile not found")
+    return success_response({
+        "user_id": profile.id,
+        "email": profile.email,
+        "full_name": profile.full_name,
+        "avatar_url": profile.avatar_url,
+    })
 
 
 @router.patch("/me")
@@ -198,7 +195,7 @@ async def update_me(
     body: UpdateProfileRequest,
     current_user: dict[str, str | object] = Depends(get_current_user),
     user_repo: UserRepository = Depends(get_user_repository),
-) -> dict[str, object]:
+) -> JSONResponse:
     user_id = cast(str, current_user["sub"])
     profile = await user_repo.update_profile(
         user_id,
@@ -206,12 +203,10 @@ async def update_me(
         avatar_url=body.avatar_url,
     )
     if profile is None:
-        raise err("PROFILE_NOT_FOUND", "Profile not found", status_code=404)
-    return {
-        "data": {
-            "user_id": profile.id,
-            "email": profile.email,
-            "full_name": profile.full_name,
-            "avatar_url": profile.avatar_url,
-        }
-    }
+        return error_response(404, "PROFILE_NOT_FOUND", "Profile not found")
+    return success_response({
+        "user_id": profile.id,
+        "email": profile.email,
+        "full_name": profile.full_name,
+        "avatar_url": profile.avatar_url,
+    })

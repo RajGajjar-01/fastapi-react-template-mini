@@ -14,14 +14,14 @@ async def get_current_user(request: Request) -> dict[str, str | object]:
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"code": "NOT_AUTHENTICATED", "message": "Not authenticated"},
+            detail={"title": "NOT_AUTHENTICATED", "detail": "Not authenticated", "type": "about:blank", "status": 401},
         )
     try:
         return verify_token(token)
     except PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"code": "TOKEN_EXPIRED", "message": "Invalid or expired token"},
+            detail={"title": "TOKEN_EXPIRED", "detail": "Invalid or expired token", "type": "about:blank", "status": 401},
         )
 
 
