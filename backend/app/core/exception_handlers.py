@@ -21,7 +21,7 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException) 
     return error_response(
         status_code=exc.status_code,
         title=str(exc.status_code),
-        detail=str(exc.detail),
+        detail=exc.detail,
     )
 
 

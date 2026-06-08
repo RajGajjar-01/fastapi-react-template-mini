@@ -31,7 +31,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-emerald-600">92</div>
+            <div className="text-3xl font-bold text-success">92</div>
             <p className="text-xs text-muted-foreground">+4 from last week</p>
           </CardContent>
         </Card>
@@ -70,19 +70,19 @@ export default function DashboardPage() {
               icon: Heart,
               label: 'Completed mindfulness session',
               time: '2 hours ago',
-              color: 'text-rose-500',
+              color: 'text-destructive',
             },
             {
               icon: Calendar,
               label: 'Scheduled nutrition consultation',
               time: 'Yesterday',
-              color: 'text-blue-500',
+              color: 'text-primary',
             },
             {
               icon: TrendingUp,
               label: 'Weekly progress report generated',
               time: '3 days ago',
-              color: 'text-emerald-500',
+              color: 'text-success',
             },
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3">

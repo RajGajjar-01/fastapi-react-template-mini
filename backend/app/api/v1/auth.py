@@ -17,6 +17,8 @@ from app.schemas.auth import (
     LoginRequest,
     SignupRequest,
     UpdateProfileRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest
 )
 from app.core.response import error_response, success_response
 
@@ -31,7 +33,7 @@ def set_auth_cookies(response: Response, tokens: dict[str, str]) -> None:
         value=tokens["access_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,
-        samesite="lax",
+        samesite="none",
         max_age=3600,
     )
     response.set_cookie(
@@ -39,14 +41,14 @@ def set_auth_cookies(response: Response, tokens: dict[str, str]) -> None:
         value=tokens["refresh_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,
-        samesite="lax",
+        samesite="none",
         max_age=2592000,
     )
 
 
 def delete_auth_cookies(response: Response) -> None:
-    response.delete_cookie("access_token", httponly=True, secure=settings.COOKIE_SECURE, samesite="lax")
-    response.delete_cookie("refresh_token", httponly=True, secure=settings.COOKIE_SECURE, samesite="lax")
+    response.delete_cookie("access_token", httponly=True, secure=settings.COOKIE_SECURE, samesite="none")
+    response.delete_cookie("refresh_token", httponly=True, secure=settings.COOKIE_SECURE, samesite="none")
 
 
 @router.post("/login")
@@ -210,3 +212,60 @@ async def update_me(
         "full_name": profile.full_name,
         "avatar_url": profile.avatar_url,
     })
+
+
+@router.post("/forgot-password")
+async def forgot_password(
+    body: ForgotPasswordRequest,
+    client: AsyncClient = Depends(get_supabase_client),
+) -> JSONResponse:
+    resp = await client.post(
+        f"{settings.SUPABASE_URL}/auth/v1/recover",
+        headers={
+            "apikey": settings.SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+        },
+        json={"email": body.email},
+    )
+
+    if resp.status_code != 200:
+        return error_response(400, "RESET_FAILED", "Failed to send reset email")
+
+    return success_response({"message": "If the email exists, a reset link has been sent"})
+
+
+@router.post("/reset-password")
+async def reset_password(
+    body: ResetPasswordRequest,
+    client: AsyncClient = Depends(get_supabase_client),
+) -> JSONResponse:
+    token_resp = await client.post(
+        f"{settings.SUPABASE_URL}/auth/v1/token",
+        params={"grant_type": "recovery"},
+        headers={
+            "apikey": settings.SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+        },
+        json={"token": body.token},
+    )
+
+    if token_resp.status_code != 200:
+        return error_response(400, "INVALID_TOKEN", "Invalid or expired reset token")
+
+    session = token_resp.json()
+    access_token = session["access_token"]
+
+    update_resp = await client.put(
+        f"{settings.SUPABASE_URL}/auth/v1/user",
+        headers={
+            "apikey": settings.SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        json={"password": body.password},
+    )
+
+    if update_resp.status_code != 200:
+        return error_response(400, "PASSWORD_UPDATE_FAILED", "Failed to update password")
+
+    return success_response({"message": "Password updated successfully"})

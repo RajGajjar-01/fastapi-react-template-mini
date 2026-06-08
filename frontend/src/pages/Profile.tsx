@@ -43,7 +43,7 @@ export default function ProfilePage() {
             <div>
               <h2 className="text-lg font-semibold">{user?.full_name || 'Your Profile'}</h2>
               <p className="text-sm text-muted-foreground">{user?.email}</p>
-              <div className="mt-2 inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+              <div className="mt-2 inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
                 Active Member
               </div>
             </div>

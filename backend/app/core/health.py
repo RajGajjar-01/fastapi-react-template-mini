@@ -2,7 +2,6 @@ import asyncio
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Request
-from starlette.responses import RedirectResponse
 
 from app.core.config import settings
 from app.core.response import success_response

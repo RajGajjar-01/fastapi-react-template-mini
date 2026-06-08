@@ -103,8 +103,8 @@ export const useAuthStore = create<AuthStore>((set) => {
 
 function axiosErrorMessage(err: unknown): string | null {
   if (axios.isAxiosError(err)) {
-    const body = err.response?.data as { detail?: string; message?: string } | undefined
-    return body?.detail ?? body?.message ?? null
+    const body = err.response?.data as { error?: { detail?: string; title?: string } } | undefined
+    return body?.error?.detail ?? body?.error?.title ?? null
   }
   if (err instanceof Error) return err.message
   return null

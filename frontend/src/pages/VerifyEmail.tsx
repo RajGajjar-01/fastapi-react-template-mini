@@ -28,7 +28,7 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="flex min-h-screen">
-      <div className="relative hidden w-1/2 lg:block" style={{ backgroundColor: '#00255B' }}>
+      <div className="relative hidden w-1/2 bg-primary lg:block">
         <video
           autoPlay
           loop
@@ -63,7 +63,7 @@ export default function VerifyEmailPage() {
             <CardContent className="pt-6">
               {status === 'loading' && (
                 <div className="flex flex-col items-center gap-4 py-8">
-                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-muted-foreground/20 border-t-emerald-500" />
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-muted-foreground/20 border-t-success" />
                   <p className="text-sm text-muted-foreground">{message}</p>
                 </div>
               )}
@@ -72,7 +72,7 @@ export default function VerifyEmailPage() {
                 <div className="flex flex-col items-center gap-4 py-8">
                   <h2 className="text-xl font-semibold">Email verified</h2>
                   <p className="text-sm text-muted-foreground">{message}</p>
-                  <Button onClick={() => navigate('/login')} className="mt-2 w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent">
+                  <Button onClick={() => navigate('/login')} className="mt-2 w-full">
                     Continue to sign in
                   </Button>
                 </div>
@@ -82,7 +82,7 @@ export default function VerifyEmailPage() {
                 <div className="flex flex-col items-center gap-4 py-8">
                   <h2 className="text-xl font-semibold">Verification failed</h2>
                   <p className="text-sm text-muted-foreground">{message}</p>
-                  <Button onClick={() => navigate('/login')} className="mt-2 w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent">
+                  <Button onClick={() => navigate('/login')} className="mt-2 w-full">
                     Back to sign in
                   </Button>
                 </div>

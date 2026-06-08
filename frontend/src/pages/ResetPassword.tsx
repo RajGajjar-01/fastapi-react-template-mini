@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
           <p className="mb-6 text-sm text-muted-foreground">
             This password reset link is invalid or has expired. Please request a new one.
           </p>
-          <Button className="w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent" onClick={() => navigate('/forgot-password')}>
+          <Button className="w-full" onClick={() => navigate('/forgot-password')}>
             Request new link
           </Button>
         </div>
@@ -74,8 +74,8 @@ export default function ResetPasswordPage() {
       })
       navigate('/login', { replace: true })
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to reset password. The link may have expired.'
+      const data = (err as { response?: { data?: { error?: { detail?: string } } } })?.response?.data
+      const message = data?.error?.detail ?? (err instanceof Error ? err.message : 'Failed to reset password. The link may have expired.')
       toast.error(message)
     } finally {
       setLoading(false)
@@ -162,7 +162,7 @@ export default function ResetPasswordPage() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? 'Saving...' : 'Reset password'}
           </Button>
 

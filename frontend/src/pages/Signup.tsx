@@ -54,7 +54,7 @@ export default function SignupPage() {
   if (submitted) {
     return (
       <div className="flex min-h-screen">
-        <div className="relative hidden w-1/2 lg:block" style={{ backgroundColor: '#00255B' }}>
+        <div className="relative hidden w-1/2 bg-primary lg:block">
         <video
           autoPlay
           loop
@@ -64,13 +64,7 @@ export default function SignupPage() {
         >
           <source src="/videos/rocket-launch.mp4" type="video/mp4" />
         </video>
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(0,37,91,0.7) 0%, rgba(6,89,169,0.4) 50%, rgba(0,37,91,0.85) 100%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/40 to-primary/85" />
         <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
           <div className="space-y-4">
             <blockquote className="text-2xl font-light leading-relaxed">
@@ -85,7 +79,7 @@ export default function SignupPage() {
 
       <div className="flex w-full flex-col justify-center bg-background lg:w-1/2">
         <div className="mx-auto w-full max-w-sm px-6 text-center">
-          <Sparkles className="mx-auto mb-4 h-12 w-12" style={{ color: '#F2771A' }} />
+          <Sparkles className="mx-auto mb-4 h-12 w-12 text-primary" />
             <h1 className="mb-2 text-2xl font-semibold tracking-tight">Check your inbox</h1>
             <p className="mb-6 text-sm text-muted-foreground">
               We&apos;ve sent a verification link to <strong>{email}</strong>. Please click the link
@@ -93,7 +87,7 @@ export default function SignupPage() {
             </p>
             <Button
               onClick={() => navigate('/login')}
-              className="w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent"
+              className="w-full"
             >
               Back to sign in
             </Button>
@@ -106,7 +100,7 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-screen">
       {/* Left side — Video / Brand */}
-      <div className="relative hidden w-1/2 lg:block" style={{ backgroundColor: '#00255B' }}>
+      <div className="relative hidden w-1/2 bg-primary lg:block">
         <video
           autoPlay
           loop
@@ -116,13 +110,7 @@ export default function SignupPage() {
         >
           <source src="/videos/rocket-launch.mp4" type="video/mp4" />
         </video>
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(0,37,91,0.7) 0%, rgba(6,89,169,0.4) 50%, rgba(0,37,91,0.85) 100%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/40 to-primary/85" />
         <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
           <div className="space-y-4">
             <blockquote className="text-2xl font-light leading-relaxed">
@@ -221,7 +209,7 @@ export default function SignupPage() {
 
             <Button
               type="submit"
-              className="w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent"
+              className="w-full"
               disabled={loading}
             >
               {loading ? (

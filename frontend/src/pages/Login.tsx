@@ -47,7 +47,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Left side — Image / Brand */}
-      <div className="relative hidden w-1/2 lg:block" style={{ backgroundColor: '#00255B' }}>
+      <div className="relative hidden w-1/2 bg-primary lg:block">
         <video
           autoPlay
           loop
@@ -57,13 +57,7 @@ export default function LoginPage() {
         >
           <source src="/videos/rocket-launch.mp4" type="video/mp4" />
         </video>
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(0,37,91,0.7) 0%, rgba(6,89,169,0.4) 50%, rgba(0,37,91,0.85) 100%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/40 to-primary/85" />
         <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
           <div className="space-y-4">
             <blockquote className="text-2xl font-light leading-relaxed">
@@ -141,7 +135,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full bg-[#F2771A] hover:bg-[#F2771A]/90 text-white border-transparent"
+              className="w-full"
               disabled={loading}
             >
               {loading ? (
