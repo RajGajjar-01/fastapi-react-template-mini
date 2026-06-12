@@ -54,17 +54,7 @@ export default function SignupPage() {
   if (submitted) {
     return (
       <div className="flex min-h-screen">
-        <div className="relative hidden w-1/2 bg-primary lg:block">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/rocket-launch.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/40 to-primary/85" />
+        <div className="relative hidden w-1/2 lg:block auth-gradient">
         <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
           <div className="space-y-4">
             <blockquote className="text-2xl font-light leading-relaxed">
@@ -99,18 +89,8 @@ export default function SignupPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left side — Video / Brand */}
-      <div className="relative hidden w-1/2 bg-primary lg:block">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/rocket-launch.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/70 via-primary/40 to-primary/85" />
+      {/* Left side — Brand */}
+      <div className="relative hidden w-1/2 lg:block auth-gradient">
         <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
           <div className="space-y-4">
             <blockquote className="text-2xl font-light leading-relaxed">

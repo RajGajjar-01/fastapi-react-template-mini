@@ -28,23 +28,7 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="flex min-h-screen">
-      <div className="relative hidden w-1/2 bg-primary lg:block">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src="/videos/rocket-launch.mp4" type="video/mp4" />
-        </video>
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(0,37,91,0.7) 0%, rgba(6,89,169,0.4) 50%, rgba(0,37,91,0.85) 100%)',
-          }}
-        />
+      <div className="relative hidden w-1/2 lg:block auth-gradient">
         <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
           <div className="space-y-4">
             <blockquote className="text-2xl font-light leading-relaxed">

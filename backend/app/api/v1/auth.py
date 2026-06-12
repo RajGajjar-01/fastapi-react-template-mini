@@ -1,5 +1,5 @@
 import logging
-from typing import cast
+from typing import Literal, cast
 
 from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.responses import JSONResponse
@@ -11,29 +11,34 @@ from app.core.dependencies import (
     get_supabase_client,
     get_user_repository,
 )
+from app.core.response import error_response, success_response
 from app.core.security import verify_token
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import (
+    ForgotPasswordRequest,
     LoginRequest,
+    ResetPasswordRequest,
     SignupRequest,
     UpdateProfileRequest,
-    ForgotPasswordRequest,
-    ResetPasswordRequest
 )
-from app.core.response import error_response, success_response
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["auth"])
 
 
+def _samesite() -> Literal["lax", "none"]:
+    return "none" if settings.COOKIE_SECURE else "lax"
+
+
 def set_auth_cookies(response: Response, tokens: dict[str, str]) -> None:
+    samesite = _samesite()
     response.set_cookie(
         key="access_token",
         value=tokens["access_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,
-        samesite="none",
+        samesite=samesite,
         max_age=3600,
     )
     response.set_cookie(
@@ -41,14 +46,15 @@ def set_auth_cookies(response: Response, tokens: dict[str, str]) -> None:
         value=tokens["refresh_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,
-        samesite="none",
+        samesite=samesite,
         max_age=2592000,
     )
 
 
 def delete_auth_cookies(response: Response) -> None:
-    response.delete_cookie("access_token", httponly=True, secure=settings.COOKIE_SECURE, samesite="none")
-    response.delete_cookie("refresh_token", httponly=True, secure=settings.COOKIE_SECURE, samesite="none")
+    samesite = _samesite()
+    response.delete_cookie("access_token", httponly=True, secure=settings.COOKIE_SECURE, samesite=samesite)
+    response.delete_cookie("refresh_token", httponly=True, secure=settings.COOKIE_SECURE, samesite=samesite)
 
 
 @router.post("/login")
@@ -101,7 +107,9 @@ async def signup(
     )
 
     if supabase_resp.status_code != 200:
-        detail = supabase_resp.json().get("msg", "Signup failed")
+        err_body = supabase_resp.json()
+        logger.warning("Supabase signup failed (%s): %s", supabase_resp.status_code, err_body)
+        detail = err_body.get("msg") or err_body.get("error_description") or err_body.get("message") or "Signup failed"
         return error_response(400, "SIGNUP_FAILED", detail)
 
     data = supabase_resp.json()
