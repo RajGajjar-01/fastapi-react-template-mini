@@ -31,7 +31,7 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-success">92</div>
+            <div className="text-3xl font-bold text-green-600">92</div>
             <p className="text-xs text-muted-foreground">+4 from last week</p>
           </CardContent>
         </Card>
@@ -82,7 +82,7 @@ export default function DashboardPage() {
               icon: TrendingUp,
               label: 'Weekly progress report generated',
               time: '3 days ago',
-              color: 'text-success',
+              color: 'text-green-600',
             },
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3">
@@ -101,7 +101,7 @@ export default function DashboardPage() {
       {/* Quick action */}
       <div className="flex gap-3">
         <Button
-          className="bg-success hover:bg-success/90 text-success-foreground"
+          className="bg-green-600 hover:bg-green-700 text-white"
           onClick={() => navigate('/profile')}
         >
           <User className="mr-2 h-4 w-4" />

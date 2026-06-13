@@ -7,13 +7,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/hooks/useAuth'
-import { useTheme } from '@/components/theme-provider'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { user, login, loading, error } = useAuth()
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,22 +42,8 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Right side — Login Form */}
-      <div className="flex w-full flex-col justify-center bg-background lg:w-1/2">
+      <div className="flex w-full flex-col justify-center bg-background">
         <div className="mx-auto w-full max-w-sm px-6">
-          <div className="mb-6 flex flex-col items-center justify-center">
-            <picture>
-              <source
-                srcSet={isDark ? '/assets/logo-head-light.webp' : '/assets/logo-head.webp'}
-                type="image/webp"
-              />
-              <img
-                src={isDark ? '/assets/logo-head-light.png' : '/assets/logo-head-fallback.png'}
-                alt="Logo"
-                className="h-14 w-auto"
-              />
-            </picture>
-          </div>
-
           <div className="mb-8 space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
             <p className="text-sm text-muted-foreground">

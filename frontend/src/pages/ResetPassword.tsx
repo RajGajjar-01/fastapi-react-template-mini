@@ -5,24 +5,11 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTheme } from '@/components/theme-provider'
 import { api } from '@/lib/api'
 
-/**
- * ResetPasswordPage
- *
- * Shown when the user clicks the password-reset link from their email.
- * Expects a `token` query param:  /reset-password?token=<jwt>
- *
- * Wire up:
- *   1. Add <Route path="/reset-password" element={<ResetPasswordPage />} /> in App.tsx
- *   2. Your backend should accept POST /auth/reset-password  { token, password }
- */
 export default function ResetPasswordPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
 
   const token = searchParams.get('token')
 
@@ -85,21 +72,6 @@ export default function ResetPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="mx-auto w-full max-w-sm px-6">
-        {/* Logo */}
-        <div className="mb-6 flex flex-col items-center justify-center">
-          <picture>
-            <source
-              srcSet={isDark ? '/assets/logo-head-light.webp' : '/assets/logo-head.webp'}
-              type="image/webp"
-            />
-            <img
-              src={isDark ? '/assets/logo-head-light.png' : '/assets/logo-head-fallback.png'}
-              alt="Logo"
-              className="h-14 w-auto"
-            />
-          </picture>
-        </div>
-
         <div className="mb-8 space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Set new password</h1>
           <p className="text-sm text-muted-foreground">

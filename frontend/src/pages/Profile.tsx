@@ -43,7 +43,7 @@ export default function ProfilePage() {
             <div>
               <h2 className="text-lg font-semibold">{user?.full_name || 'Your Profile'}</h2>
               <p className="text-sm text-muted-foreground">{user?.email}</p>
-              <div className="mt-2 inline-flex items-center rounded-full bg-success/10 px-2.5 py-0.5 text-xs font-medium text-success">
+              <div className="mt-2 inline-flex items-center rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-600">
                 Active Member
               </div>
             </div>
@@ -79,7 +79,7 @@ export default function ProfilePage() {
         </Card>
 
         <div className="flex gap-3">
-          <Button type="submit" disabled={saving} className="bg-success hover:bg-success/90 text-success-foreground">
+          <Button type="submit" disabled={saving} className="bg-green-600 hover:bg-green-700 text-white">
             {saving ? (
               <span className="flex items-center gap-2">
                 <Save className="h-4 w-4 animate-pulse" />

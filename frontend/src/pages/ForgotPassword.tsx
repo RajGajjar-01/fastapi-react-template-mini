@@ -5,7 +5,6 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useTheme } from '@/components/theme-provider'
 import { api } from '@/lib/api'
 
 export default function ForgotPasswordPage() {
@@ -13,8 +12,6 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,7 +35,7 @@ export default function ForgotPasswordPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="mx-auto w-full max-w-sm px-6 text-center">
-          <MailCheck className="mx-auto mb-4 h-12 w-12 text-success" />
+          <MailCheck className="mx-auto mb-4 h-12 w-12 text-green-600" />
           <h1 className="mb-2 text-2xl font-semibold tracking-tight">Email sent</h1>
           <p className="mb-6 text-sm text-muted-foreground">
             If an account exists for <strong>{email}</strong>, you will receive a password reset
@@ -55,20 +52,6 @@ export default function ForgotPasswordPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="mx-auto w-full max-w-sm px-6">
-        <div className="mb-6 flex flex-col items-center justify-center">
-          <picture>
-            <source
-              srcSet={isDark ? '/assets/logo-head-light.webp' : '/assets/logo-head.webp'}
-              type="image/webp"
-            />
-            <img
-              src={isDark ? '/assets/logo-head-light.png' : '/assets/logo-head-fallback.png'}
-              alt="Logo"
-              className="h-14 w-auto"
-            />
-          </picture>
-        </div>
-
         <div className="mb-8 space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Reset your password</h1>
           <p className="text-sm text-muted-foreground">

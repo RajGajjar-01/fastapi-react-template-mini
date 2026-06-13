@@ -49,7 +49,6 @@ export function AppSidebar() {
   const { user, logout } = useAuth()
   const { isMobile, setOpenMobile, state } = useSidebar()
   const { theme, setTheme } = useTheme()
-  const isDark = theme === 'dark'
 
   const handleLogout = async () => {
     await logout()
@@ -62,17 +61,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0">
         <div className="flex items-center gap-2 px-4 py-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
-          <picture>
-            <source
-              srcSet={isDark ? '/assets/logo-head-light.webp' : '/assets/logo-head.webp'}
-              type="image/webp"
-            />
-            <img
-              src={isDark ? '/assets/logo-head-light.png' : '/assets/logo-head-fallback.png'}
-              alt="Logo"
-              className="h-11 w-auto group-data-[collapsible=icon]:h-8"
-            />
-          </picture>
+          <span className="text-lg font-bold tracking-tight">HealthTracker</span>
         </div>
       </SidebarHeader>
 

@@ -8,13 +8,10 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useAuth } from '@/hooks/useAuth'
 import { useAuthStore } from '@/stores/useAuthStore'
-import { useTheme } from '@/components/theme-provider'
 
 export default function SignupPage() {
   const navigate = useNavigate()
   const { user, loading } = useAuth()
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
 
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
@@ -54,7 +51,7 @@ export default function SignupPage() {
   if (submitted) {
     return (
       <div className="flex min-h-screen">
-      <div className="flex w-full flex-col justify-center bg-background lg:w-1/2">
+      <div className="flex w-full flex-col justify-center bg-background">
         <div className="mx-auto w-full max-w-sm px-6 text-center">
           <Sparkles className="mx-auto mb-4 h-12 w-12 text-primary" />
             <h1 className="mb-2 text-2xl font-semibold tracking-tight">Check your inbox</h1>
@@ -77,22 +74,8 @@ export default function SignupPage() {
   return (
     <div className="flex min-h-screen">
       {/* Right side — Signup Form */}
-      <div className="flex w-full flex-col justify-center bg-background lg:w-1/2">
+      <div className="flex w-full flex-col justify-center bg-background">
         <div className="mx-auto w-full max-w-sm px-6">
-          <div className="mb-6 flex flex-col items-center justify-center">
-            <picture>
-              <source
-                srcSet={isDark ? '/assets/logo-head-light.webp' : '/assets/logo-head.webp'}
-                type="image/webp"
-              />
-              <img
-                src={isDark ? '/assets/logo-head-light.png' : '/assets/logo-head-fallback.png'}
-                alt="Logo"
-                className="h-14 w-auto"
-              />
-            </picture>
-          </div>
-
           <div className="mb-8 space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Create your account</h1>
             <p className="text-sm text-muted-foreground">

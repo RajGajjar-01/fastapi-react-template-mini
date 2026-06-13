@@ -28,7 +28,7 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="flex min-h-screen">
-      <div className="flex w-full items-center justify-center bg-background lg:w-1/2">
+      <div className="flex w-full items-center justify-center bg-background">
         <div className="mx-auto w-full max-w-sm px-6 text-center">
           <Card>
             <CardContent className="pt-6">
