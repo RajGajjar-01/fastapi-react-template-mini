@@ -28,19 +28,6 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="flex min-h-screen">
-      <div className="relative hidden w-1/2 lg:block auth-gradient">
-        <div className="absolute inset-0 flex flex-col justify-end p-12 text-white">
-          <div className="space-y-4">
-            <blockquote className="text-2xl font-light leading-relaxed">
-              "The greatest wealth is health."
-            </blockquote>
-            <p className="text-sm text-white/80">
-              — Virgil, Roman Poet
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div className="flex w-full items-center justify-center bg-background lg:w-1/2">
         <div className="mx-auto w-full max-w-sm px-6 text-center">
           <Card>

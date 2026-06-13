@@ -60,7 +60,6 @@ def delete_auth_cookies(response: Response) -> None:
 @router.post("/login")
 async def login(
     body: LoginRequest,
-    response: Response,
     client: AsyncClient = Depends(get_supabase_client),
     user_repo: UserRepository = Depends(get_user_repository),
 ) -> JSONResponse:
@@ -85,15 +84,14 @@ async def login(
         email=cast(str, payload["email"]),
     )
 
-    set_auth_cookies(response, tokens)
-
-    return success_response({"message": "Logged in", "email": body.email})
+    resp = success_response({"message": "Logged in", "email": body.email})
+    set_auth_cookies(resp, tokens)
+    return resp
 
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(
     body: SignupRequest,
-    response: Response,
     client: AsyncClient = Depends(get_supabase_client),
     user_repo: UserRepository = Depends(get_user_repository),
 ) -> JSONResponse:
@@ -123,12 +121,17 @@ async def signup(
                 email=cast(str, payload["email"]),
                 full_name=body.full_name,
             )
-            set_auth_cookies(response, data)
+            resp = success_response(
+                {"message": "Signed up", "email": body.email},
+                status_code=status.HTTP_201_CREATED,
+            )
+            set_auth_cookies(resp, data)
+            return resp
         except Exception:
             logger.warning("Signup token verification failed", exc_info=True)
 
     return success_response(
-        {"message": "Signed up" if auto_confirmed else "Confirmation email sent", "email": body.email},
+        {"message": "Confirmation email sent", "email": body.email},
         status_code=status.HTTP_201_CREATED,
     )
 
@@ -136,7 +139,6 @@ async def signup(
 @router.post("/refresh")
 async def refresh(
     request: Request,
-    response: Response,
     client: AsyncClient = Depends(get_supabase_client),
 ) -> JSONResponse:
     refresh_token = request.cookies.get("refresh_token")
@@ -158,17 +160,16 @@ async def refresh(
 
     tokens = supabase_resp.json()
 
-    set_auth_cookies(response, tokens)
-
-    return success_response({"message": "Refreshed"})
+    resp = success_response({"message": "Refreshed"})
+    set_auth_cookies(resp, tokens)
+    return resp
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
     request: Request,
-    response: Response,
     client: AsyncClient = Depends(get_supabase_client),
-) -> None:
+) -> Response:
     access_token = request.cookies.get("access_token")
 
     if access_token:
@@ -180,7 +181,9 @@ async def logout(
             },
         )
 
-    delete_auth_cookies(response)
+    resp = Response(status_code=status.HTTP_204_NO_CONTENT)
+    delete_auth_cookies(resp)
+    return resp
 
 
 @router.get("/me")
