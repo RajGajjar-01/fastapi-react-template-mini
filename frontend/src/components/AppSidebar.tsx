@@ -1,4 +1,13 @@
-import { ChevronsUpDown, Home, LogOut, Moon, Sun, User } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsUpDown,
+  Home,
+  LogOut,
+  Moon,
+  Sun,
+  User,
+} from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -18,6 +27,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar'
 import { useTheme } from '@/components/theme-provider'
@@ -47,7 +57,7 @@ export function AppSidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, logout } = useAuth()
-  const { isMobile, setOpenMobile, state } = useSidebar()
+  const { isMobile, setOpenMobile, state, toggleSidebar } = useSidebar()
   const { theme, setTheme } = useTheme()
 
   const handleLogout = async () => {
@@ -59,10 +69,17 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:px-0">
-        <div className="flex items-center gap-2 px-4 py-4 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
-          <span className="text-lg font-bold tracking-tight">HealthTracker</span>
-        </div>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className="group-data-[collapsible=icon]:justify-center text-lg font-bold tracking-tight"
+              disabled
+            >
+              {state === 'collapsed' ? 'YL' : 'Your Logo'}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent>
@@ -100,12 +117,12 @@ export function AppSidebar() {
               <DropdownMenuTrigger
                 render={
                   <SidebarMenuButton
-                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                    tooltip={state === 'collapsed' ? user?.full_name || user?.email : undefined}
+                    tooltip={state === 'collapsed' ? (user?.full_name || user?.email || 'Profile') : undefined}
+                    className="h-auto py-2.5 px-3 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:py-0! group-data-[collapsible=icon]:px-0! data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   />
                 }
               >
-                <Avatar className="size-8">
+                <Avatar className="size-8 shrink-0">
                   <AvatarFallback className="bg-zinc-600 text-white text-xs">
                     {getInitials(user?.full_name)}
                   </AvatarFallback>
@@ -130,7 +147,9 @@ export function AppSidebar() {
                       </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium text-foreground">{user?.full_name || 'User'}</span>
+                      <span className="truncate font-medium text-foreground">
+                        {user?.full_name || 'User'}
+                      </span>
                       <span className="truncate text-xs text-muted-foreground">{user?.email}</span>
                     </div>
                   </div>
@@ -140,8 +159,14 @@ export function AppSidebar() {
                   <User />
                   Profile
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                  {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                <DropdownMenuItem
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
                   <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -153,6 +178,25 @@ export function AppSidebar() {
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
+
+        {!isMobile && (
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={toggleSidebar}
+                tooltip={state === 'collapsed' ? 'Expand sidebar' : undefined}
+                className="bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/90 hover:text-sidebar-primary-foreground"
+              >
+                {state === 'collapsed' ? (
+                  <ChevronRight className="size-4" />
+                ) : (
+                  <ChevronLeft className="size-4" />
+                )}
+                <span>Collapse</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        )}
       </SidebarFooter>
     </Sidebar>
   )

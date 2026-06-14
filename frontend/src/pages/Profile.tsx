@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/useAuth'
@@ -29,7 +29,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl">
+    <div className="mx-auto max-w-xl min-h-dvh">
       <div className="mb-8 space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Your Profile</h1>
         <p className="text-sm text-muted-foreground">
@@ -37,7 +37,7 @@ export default function ProfilePage() {
         </p>
       </div>
 
-      <Card className="mb-6">
+      <Card className="mb-6 ring-0 border">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div>
@@ -52,8 +52,8 @@ export default function ProfilePage() {
       </Card>
 
       <form onSubmit={handleSave} className="space-y-6">
-        <Card>
-          <CardHeader>
+        <Card className="ring-0 border">
+          <CardHeader className="border-b border-[var(--border)]">
             <CardTitle className="text-base">Profile Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -68,34 +68,31 @@ export default function ProfilePage() {
               <Input
                 id="fullName"
                 type="text"
-                placeholder="Dr. Sarah Chen"
+                placeholder="Alex Rivera"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
               />
             </div>
-
-
           </CardContent>
+          <CardFooter className="border-t border-[var(--border)] flex justify-end gap-3 bg-transparent">
+            <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? (
+                <span className="flex items-center gap-2">
+                  <Save className="h-4 w-4 animate-pulse" />
+                  Saving...
+                </span>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Save changes
+                </>
+              )}
+            </Button>
+          </CardFooter>
         </Card>
-
-        <div className="flex gap-3">
-          <Button type="submit" disabled={saving} className="bg-green-600 hover:bg-green-700 text-white">
-            {saving ? (
-              <span className="flex items-center gap-2">
-                <Save className="h-4 w-4 animate-pulse" />
-                Saving...
-              </span>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                Save changes
-              </>
-            )}
-          </Button>
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
-            Cancel
-          </Button>
-        </div>
       </form>
     </div>
   )
