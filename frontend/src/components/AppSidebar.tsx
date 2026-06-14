@@ -76,7 +76,7 @@ export function AppSidebar() {
               className="group-data-[collapsible=icon]:justify-center text-lg font-bold tracking-tight"
               disabled
             >
-              {state === 'collapsed' ? 'YL' : 'Your Logo'}
+              {state === 'collapsed' ? 'YL' : 'YourLogo'}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

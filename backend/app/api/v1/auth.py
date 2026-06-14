@@ -15,6 +15,7 @@ from app.core.response import error_response, success_response
 from app.core.security import verify_token
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import (
+    ChangePasswordRequest,
     ForgotPasswordRequest,
     LoginRequest,
     ResetPasswordRequest,
@@ -280,3 +281,46 @@ async def reset_password(
         return error_response(400, "PASSWORD_UPDATE_FAILED", "Failed to update password")
 
     return success_response({"message": "Password updated successfully"})
+
+
+@router.post("/change-password")
+async def change_password(
+    body: ChangePasswordRequest,
+    request: Request,
+    current_user: dict[str, str | object] = Depends(get_current_user),
+    client: AsyncClient = Depends(get_supabase_client),
+) -> JSONResponse:
+    email = cast(str, current_user["email"])
+
+    auth_resp = await client.post(
+        f"{settings.SUPABASE_URL}/auth/v1/token",
+        params={"grant_type": "password"},
+        headers={
+            "apikey": settings.SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json",
+        },
+        json={"email": email, "password": body.current_password},
+    )
+
+    if auth_resp.status_code != 200:
+        return error_response(400, "INVALID_CURRENT_PASSWORD", "Current password is incorrect")
+
+    session = auth_resp.json()
+    access_token = session["access_token"]
+
+    update_resp = await client.put(
+        f"{settings.SUPABASE_URL}/auth/v1/user",
+        headers={
+            "apikey": settings.SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+        },
+        json={"password": body.new_password},
+    )
+
+    if update_resp.status_code != 200:
+        return error_response(400, "PASSWORD_UPDATE_FAILED", "Failed to update password")
+
+    resp = success_response({"message": "Password updated successfully"})
+    set_auth_cookies(resp, session)
+    return resp
