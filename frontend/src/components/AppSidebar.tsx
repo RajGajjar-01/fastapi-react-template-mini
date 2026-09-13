@@ -5,6 +5,7 @@ import {
   Home,
   LogOut,
   Moon,
+  Shield,
   Sun,
   User,
 } from 'lucide-react'
@@ -43,6 +44,8 @@ const baseItems: Item[] = [
   { icon: Home, title: 'Dashboard', path: '/dashboard' },
 ]
 
+const adminItem: Item = { icon: Shield, title: 'Admin', path: '/admin' }
+
 function getInitials(name: string | null | undefined): string {
   if (!name) return '?'
   return name
@@ -65,7 +68,7 @@ export function AppSidebar() {
     navigate('/login', { replace: true })
   }
 
-  const items = baseItems
+  const items = user?.role === 'admin' ? [...baseItems, adminItem] : baseItems
 
   return (
     <Sidebar collapsible="icon">

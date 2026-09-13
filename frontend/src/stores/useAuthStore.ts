@@ -7,6 +7,7 @@ export interface AuthUserProfile {
   email: string
   full_name: string | null
   avatar_url: string | null
+  role: 'user' | 'moderator' | 'admin'
 }
 
 interface AuthState {

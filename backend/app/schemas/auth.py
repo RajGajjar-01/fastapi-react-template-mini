@@ -1,4 +1,8 @@
+from typing import Literal
+
 from pydantic import BaseModel, EmailStr
+
+UserRole = Literal["user", "moderator", "admin"]
 
 
 class LoginRequest(BaseModel):
@@ -29,3 +33,7 @@ class ResetPasswordRequest(BaseModel):
 class ChangePasswordRequest(BaseModel):
     current_password: str
     new_password: str
+
+
+class AssignRoleRequest(BaseModel):
+    role: UserRole

@@ -201,6 +201,7 @@ async def get_me(
         "email": profile.email,
         "full_name": profile.full_name,
         "avatar_url": profile.avatar_url,
+        "role": profile.role,
     })
 
 
@@ -223,6 +224,7 @@ async def update_me(
         "email": profile.email,
         "full_name": profile.full_name,
         "avatar_url": profile.avatar_url,
+        "role": profile.role,
     })
 
 

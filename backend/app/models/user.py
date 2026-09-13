@@ -9,6 +9,7 @@ class UserProfile:
     email: str
     full_name: str | None
     avatar_url: str | None
+    role: str
     created_at: datetime
     updated_at: datetime
 
@@ -19,6 +20,7 @@ class UserProfile:
             email=row["email"],
             full_name=row.get("full_name"),
             avatar_url=row.get("avatar_url"),
+            role=row.get("role", "user"),
             created_at=row["created_at"],
             updated_at=row["updated_at"],
         )

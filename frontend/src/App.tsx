@@ -6,6 +6,7 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 // Components
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { ThemeProvider } from '@/components/theme-provider'
+import AdminPage from '@/pages/Admin'
 import DashboardPage from '@/pages/Dashboard'
 import ForgotPasswordPage from '@/pages/ForgotPassword'
 // Pages
@@ -46,6 +47,7 @@ export default function App() {
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/admin" element={<AdminPage />} />
             </Route>
           </Route>
 
