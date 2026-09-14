@@ -35,7 +35,7 @@ export default function ProfilePage() {
     e.preventDefault()
     setSaving(true)
     try {
-      await updateProfile(fullName || null, null)
+      await updateProfile(fullName || null, user?.avatar_url ?? null)
       toast.success('Profile updated successfully')
     } catch {
       toast.error('Failed to update profile')
@@ -118,6 +118,12 @@ export default function ProfilePage() {
         <div className="w-48 shrink-0">
           <h2 className="text-sm font-medium">Security</h2>
           <p className="mt-1 text-xs text-muted-foreground">Update your password</p>
+          <a
+            href="/forgot-password"
+            className="mt-2 inline-block text-xs text-primary hover:underline"
+          >
+            Forgot password?
+          </a>
         </div>
 
         <form onSubmit={handleSubmit(handleChangePassword)} className="flex-1 space-y-4">

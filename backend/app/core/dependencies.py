@@ -48,23 +48,30 @@ async def get_current_profile(
     return profile
 
 
+async def get_current_role(
+    current_user: dict[str, str | object] = Depends(get_current_user),
+) -> str:
+    app_metadata = cast(dict[str, object], current_user.get("app_metadata") or {})
+    return cast(str, app_metadata.get("user_role", "user"))
+
+
 async def require_admin(
-    profile: UserProfile = Depends(get_current_profile),
-) -> UserProfile:
-    if profile.role != "admin":
+    role: str = Depends(get_current_role),
+) -> str:
+    if role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail={"title": "FORBIDDEN", "detail": "Admin access required", "type": "about:blank", "status": 403},
         )
-    return profile
+    return role
 
 
 async def require_moderator_or_admin(
-    profile: UserProfile = Depends(get_current_profile),
-) -> UserProfile:
-    if profile.role not in ("moderator", "admin"):
+    role: str = Depends(get_current_role),
+) -> str:
+    if role not in ("moderator", "admin"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail={"title": "FORBIDDEN", "detail": "Moderator or admin access required", "type": "about:blank", "status": 403},
         )
-    return profile
+    return role

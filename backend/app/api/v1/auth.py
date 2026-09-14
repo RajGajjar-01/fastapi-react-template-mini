@@ -40,7 +40,7 @@ def set_auth_cookies(response: Response, tokens: dict[str, str]) -> None:
         httponly=True,
         secure=settings.COOKIE_SECURE,
         samesite=samesite,
-        max_age=3600,
+        max_age=600,  # matches GOTRUE_JWT_EXP — keeps the JWT's app_metadata.user_role fresh
     )
     response.set_cookie(
         key="refresh_token",

@@ -68,7 +68,8 @@ export function AppSidebar() {
     navigate('/login', { replace: true })
   }
 
-  const items = user?.role === 'admin' ? [...baseItems, adminItem] : baseItems
+  const items =
+    user?.role === 'admin' || user?.role === 'moderator' ? [...baseItems, adminItem] : baseItems
 
   return (
     <Sidebar collapsible="icon">

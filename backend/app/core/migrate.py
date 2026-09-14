@@ -61,6 +61,8 @@ async def main() -> None:
         host=settings.POSTGRES_SERVER,
         port=settings.POSTGRES_PORT,
         database=settings.POSTGRES_DB,
+        min_size=1,
+        max_size=1,
     )
     try:
         applied = await run_migrations(pool)

@@ -12,9 +12,13 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     const token = searchParams.get('token')
     const type = searchParams.get('type')
+    const errorDescription = searchParams.get('error_description')
 
     const timer = setTimeout(() => {
-      if (token && type === 'signup') {
+      if (errorDescription) {
+        setStatus('error')
+        setMessage(errorDescription.replace(/\+/g, ' '))
+      } else if (token && type === 'signup') {
         setStatus('success')
         setMessage('Your email has been verified successfully!')
       } else {

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
 from app.core.dependencies import (
+    get_current_user,
     get_user_repository,
     require_admin,
     require_moderator_or_admin,
@@ -26,7 +27,7 @@ def _serialize(profile: UserProfile) -> dict:
 
 @router.get("/users")
 async def list_users(
-    _: UserProfile = Depends(require_moderator_or_admin),
+    _: str = Depends(require_moderator_or_admin),
     user_repo: UserRepository = Depends(get_user_repository),
 ) -> JSONResponse:
     users = await user_repo.get_all()
@@ -37,9 +38,12 @@ async def list_users(
 async def assign_role(
     user_id: str,
     body: AssignRoleRequest,
-    _: UserProfile = Depends(require_admin),
+    current_user: dict[str, str | object] = Depends(get_current_user),
+    _: str = Depends(require_admin),
     user_repo: UserRepository = Depends(get_user_repository),
 ) -> JSONResponse:
+    if user_id == current_user["sub"]:
+        return error_response(400, "CANNOT_MODIFY_OWN_ROLE", "You cannot change your own role")
     profile = await user_repo.assign_role(user_id, body.role)
     if profile is None:
         return error_response(404, "USER_NOT_FOUND", "User not found")

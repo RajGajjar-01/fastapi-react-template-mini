@@ -133,17 +133,19 @@ export default function AdminPage() {
                       })}
                     </span>
 
-                    {/* Role select */}
-                    <select
-                      value={u.role}
-                      disabled={isSelf || updating === u.user_id}
-                      onChange={(e) => handleRoleChange(u.user_id, e.target.value as Role)}
-                      className="shrink-0 rounded-md border border-input bg-background px-2.5 py-1.5 text-xs text-foreground shadow-sm disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ring"
-                    >
-                      <option value="user">User</option>
-                      <option value="moderator">Moderator</option>
-                      <option value="admin">Admin</option>
-                    </select>
+                    {/* Role select — only admins can assign roles */}
+                    {user?.role === 'admin' && (
+                      <select
+                        value={u.role}
+                        disabled={isSelf || updating === u.user_id}
+                        onChange={(e) => handleRoleChange(u.user_id, e.target.value as Role)}
+                        className="shrink-0 rounded-md border border-input bg-background px-2.5 py-1.5 text-xs text-foreground shadow-sm disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="user">User</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    )}
                   </div>
                 )
               })}
