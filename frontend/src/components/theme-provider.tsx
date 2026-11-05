@@ -2,6 +2,17 @@ import { createContext, useContext, useEffect, useState } from 'react'
 
 type Theme = 'dark' | 'light' | 'system'
 
+const THEMES: readonly string[] = ['dark', 'light', 'system']
+
+function readStoredTheme(storageKey: string, fallback: Theme): Theme {
+  try {
+    const stored = localStorage.getItem(storageKey)
+    return stored !== null && THEMES.includes(stored) ? (stored as Theme) : fallback
+  } catch {
+    return fallback
+  }
+}
+
 interface ThemeProviderState {
   theme: Theme
   setTheme: (theme: Theme) => void
@@ -21,9 +32,7 @@ export function ThemeProvider({
   defaultTheme?: Theme
   storageKey?: string
 }) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
-  )
+  const [theme, setTheme] = useState<Theme>(() => readStoredTheme(storageKey, defaultTheme))
 
   useEffect(() => {
     const root = window.document.documentElement

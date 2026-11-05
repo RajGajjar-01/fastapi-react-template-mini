@@ -11,7 +11,8 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 
-  const token = searchParams.get('token')
+  // The recovery email links here with ?token_hash=... (see README).
+  const token = searchParams.get('token_hash') ?? searchParams.get('token')
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -61,8 +62,13 @@ export default function ResetPasswordPage() {
       })
       navigate('/login', { replace: true })
     } catch (err) {
-      const data = (err as { response?: { data?: { error?: { detail?: string } } } })?.response?.data
-      const message = data?.error?.detail ?? (err instanceof Error ? err.message : 'Failed to reset password. The link may have expired.')
+      const data = (err as { response?: { data?: { error?: { detail?: string } } } })?.response
+        ?.data
+      const message =
+        data?.error?.detail ??
+        (err instanceof Error
+          ? err.message
+          : 'Failed to reset password. The link may have expired.')
       toast.error(message)
     } finally {
       setLoading(false)
@@ -78,8 +84,6 @@ export default function ResetPasswordPage() {
             Choose a strong password for your account.
           </p>
         </div>
-
-
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* New password */}

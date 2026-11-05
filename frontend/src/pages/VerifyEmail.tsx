@@ -7,7 +7,7 @@ export default function VerifyEmailPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
-  const [message, setMessage] = useState('Verifying your email address...')
+  const [message, setMessage] = useState('Checking your link...')
 
   useEffect(() => {
     const token = searchParams.get('token')
@@ -17,10 +17,12 @@ export default function VerifyEmailPage() {
     const timer = setTimeout(() => {
       if (errorDescription) {
         setStatus('error')
-        setMessage(errorDescription.replace(/\+/g, ' '))
+        setMessage(errorDescription.replace(/\+/g, ' ').slice(0, 200))
       } else if (token && type === 'signup') {
+        // The auth service confirms the address before it sends the user here.
+        // This page cannot check that, so it does not claim to.
         setStatus('success')
-        setMessage('Your email has been verified successfully!')
+        setMessage('If your email was confirmed, you can sign in now.')
       } else {
         setStatus('error')
         setMessage('The verification link is invalid or has expired.')
@@ -45,7 +47,7 @@ export default function VerifyEmailPage() {
 
               {status === 'success' && (
                 <div className="flex flex-col items-center gap-4 py-8">
-                  <h2 className="text-xl font-semibold">Email verified</h2>
+                  <h2 className="text-xl font-semibold">Email link opened</h2>
                   <p className="text-sm text-muted-foreground">{message}</p>
                   <Button onClick={() => navigate('/login')} className="mt-2 w-full">
                     Continue to sign in
