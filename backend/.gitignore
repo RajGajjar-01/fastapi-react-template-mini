@@ -33,11 +33,7 @@ venv.bak/
 .python-version
 
 # uv
-uv.lock
-# Note: It is often recommended to commit uv.lock if it's an application,
-# but some prefer to ignore it. I'll leave it out of ignore by default if 
-# the user wants reproducible builds, but uv.lock was already staged 
-# in their git status so I won't ignore it unless asked.
+# uv.lock is committed on purpose: the Dockerfile builds with `uv sync --frozen`.
 
 # Tests / Coverage
 .tox/
@@ -71,3 +67,6 @@ dmypy.json
 *.sqlite3
 *.db
 
+
+# macOS
+.DS_Store
