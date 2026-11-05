@@ -19,6 +19,7 @@ def error_response(
     title: str,
     detail: str,
     error_type: str = "about:blank",
+    headers: dict[str, str] | None = None,
 ) -> JSONResponse:
     return JSONResponse(
         status_code=status_code,
@@ -31,4 +32,5 @@ def error_response(
             },
             "meta": None,
         },
+        headers=headers,
     )

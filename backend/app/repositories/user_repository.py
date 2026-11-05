@@ -25,12 +25,19 @@ class UserRepository(BaseRepository):
             return None
         return UserProfile.from_row(dict(row))
 
-    async def get_all(self) -> list[UserProfile]:
+    async def get_page(self, limit: int, offset: int) -> list[UserProfile]:
         async with self._connection() as conn:
             rows = await conn.fetch(
-                f"SELECT {_COLS} FROM profiles ORDER BY created_at DESC",
+                f"SELECT {_COLS} FROM profiles ORDER BY created_at DESC, id LIMIT $1 OFFSET $2",
+                limit,
+                offset,
             )
         return [UserProfile.from_row(dict(row)) for row in rows]
+
+    async def count(self) -> int:
+        async with self._connection() as conn:
+            total = await conn.fetchval("SELECT count(*) FROM profiles")
+        return int(total)
 
     async def upsert(
         self,

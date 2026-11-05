@@ -9,6 +9,6 @@ class BaseRepository:
         self._pool = pool
 
     @asynccontextmanager
-    async def _connection(self) -> AsyncGenerator[Connection, None]:
+    async def _connection(self) -> AsyncGenerator[Connection]:
         async with self._pool.acquire() as conn:
             yield conn

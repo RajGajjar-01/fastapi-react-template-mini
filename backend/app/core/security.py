@@ -1,3 +1,5 @@
+import asyncio
+
 import jwt
 from jwt import PyJWKClient
 
@@ -22,5 +24,11 @@ def verify_token(token: str) -> dict[str, object]:
         signing_key.key,
         algorithms=["ES256"],
         audience="authenticated",
+        options={"require": ["exp", "sub"]},
     )
     return payload
+
+
+async def verify_token_async(token: str) -> dict[str, object]:
+    """Verify off the event loop: a cold key cache makes a blocking HTTP fetch."""
+    return await asyncio.to_thread(verify_token, token)
